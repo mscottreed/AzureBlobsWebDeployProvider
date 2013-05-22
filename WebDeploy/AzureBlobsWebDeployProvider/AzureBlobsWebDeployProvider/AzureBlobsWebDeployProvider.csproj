@@ -59,7 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AzureBlobsDeploymentProvider.cs" />
-    <Compile Include="AzureBlobsDeploymentProviderFactory.cs" />
+    <Compile Include="AzureBlobsDeploymentProviderFactory.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,7 +71,7 @@
   <PropertyGroup>
     <PostBuildEvent>if not exist $(TargetDir)Merged md $(TargetDir)Merged
 "C:\Program Files (x86)\Microsoft\ILMerge\IlMerge.exe" /wildcards /out:$(TargetDir)Merged\$(TargetName)Merged.dll $(TargetDir)*.dll
-xcopy /y "$(TargetDir)Merged" "C:\Program Files\IIS\Microsoft Web Deploy\Extensibility"</PostBuildEvent>
+xcopy /y "$(TargetDir)Merged" "C:\Program Files\IIS\Microsoft Web Deploy V3\Extensibility"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
