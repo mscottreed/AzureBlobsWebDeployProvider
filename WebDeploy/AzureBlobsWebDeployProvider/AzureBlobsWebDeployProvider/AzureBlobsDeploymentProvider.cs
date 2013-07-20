@@ -65,18 +65,25 @@
                 var rootDirInfo = new DirectoryInfo(source.ProviderContext.Path);
                 // get that directory and and make sure that a container name exists in the cloud
                 var container = GetContainer(rootDirInfo.Name);
-                Console.WriteLine("Creating container {0}", rootDirInfo.Name);
+               
                 if (!whatIf)
                 {
+                   
+                    Console.WriteLine("Creating container {0}", rootDirInfo.Name);
+
+                   
                     container.CreateIfNotExist();
+                    //Set the permissions for the container
+                    container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob });
                 }
 
                 // Loop over items within the container and output the length and URI.
+               
                 foreach (IListBlobItem item in container.ListBlobs(new BlobRequestOptions { UseFlatBlobListing = true }))
                 {
                     if (item is CloudBlockBlob)
                     {
-                        files.Add(item.Uri.AbsolutePath);
+                        files.Add(Uri.UnescapeDataString(item.Uri.AbsolutePath));
                     }
                 }
 
@@ -105,9 +112,9 @@
             bool shouldUpload = false;
             CloudBlockBlob blob = container.GetBlockBlobReference(path);
             if (!files.Contains(uriPath))
-            {
-                Console.WriteLine("File not present, uploading {0}", path);
-                shouldUpload = true;
+            {                
+                Console.WriteLine("File not present, uploading {0}", path);               
+                shouldUpload = true;              
             }
             else
             {
@@ -132,17 +139,21 @@
                     }
                 }
             }
+
             if (shouldUpload)
             {
                 if (!whatIf)
-                {
+                {                   
                     using (var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
                     {
-                        blob.UploadFromStream(fileStream);
+                        blob.Properties.ContentType = MimeManager.GetMimeType(file.Extension);
+                        blob.UploadFromStream(fileStream);                        
                     }
                 }
             }
         }
+
+        
 
         public override void Update(DeploymentObject source, bool whatIf)
         {

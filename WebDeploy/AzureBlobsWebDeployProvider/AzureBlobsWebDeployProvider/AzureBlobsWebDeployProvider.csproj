@@ -62,6 +62,7 @@
     <Compile Include="AzureBlobsDeploymentProviderFactory.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MimeManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
